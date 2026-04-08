@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8"><title>داشبورد ادمین</title></head>
+<body>
+    <h2>خوش آمدید، {{ user.full_name }} — نقش: ادمین</h2>
+    <form method="post" action="/accounts/logout/">
+        {% csrf_token %}
+        <button type="submit">خروج</button>
+    </form>
+</body>
+</html>
