@@ -1,3 +1,147 @@
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
 
-# Create your models here.
+
+class BorrowRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'در انتظار تأیید'
+        APPROVED = 'approved', 'تأیید شده'
+        REJECTED = 'rejected', 'رد شده'
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='borrow_requests',
+        verbose_name='کاربر'
+    )
+    book = models.ForeignKey(
+        'books.Book',
+        on_delete=models.CASCADE,
+        related_name='borrow_requests',
+        verbose_name='کتاب'
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+        verbose_name='وضعیت'
+    )
+    request_date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ درخواست')
+    response_date = models.DateTimeField(null=True, blank=True, verbose_name='تاریخ پاسخ')
+    note = models.TextField(null=True, blank=True, verbose_name='یادداشت')
+
+    class Meta:
+        verbose_name = 'درخواست امانت'
+        verbose_name_plural = 'درخواست‌های امانت'
+        db_table = 'borrow_requests'
+
+    def __str__(self):
+        return f"{self.user} — {self.book} ({self.status})"
+
+
+class Borrow(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='borrows',
+        verbose_name='کاربر'
+    )
+    book_copy = models.ForeignKey(
+        'books.BookCopy',
+        on_delete=models.CASCADE,
+        related_name='borrows',
+        verbose_name='نسخه کتاب'
+    )
+    borrow_request = models.OneToOneField(
+        BorrowRequest,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='borrow',
+        verbose_name='درخواست مرتبط'
+    )
+    borrow_date = models.DateField(default=timezone.now, verbose_name='تاریخ امانت')
+    due_date = models.DateField(verbose_name='تاریخ سررسید')
+    return_date = models.DateField(null=True, blank=True, verbose_name='تاریخ بازگشت')
+    is_returned = models.BooleanField(default=False, verbose_name='بازگردانده شده')
+
+    class Meta:
+        verbose_name = 'امانت'
+        verbose_name_plural = 'امانت‌ها'
+        db_table = 'borrows'
+
+    def __str__(self):
+        return f"{self.user} — {self.book_copy} — {self.borrow_date}"
+
+    @property
+    def is_overdue(self):
+        if self.is_returned:
+            return False
+        return timezone.now().date() > self.due_date
+
+    @property
+    def overdue_days(self):
+        if not self.is_overdue:
+            return 0
+        end = self.return_date or timezone.now().date()
+        return (end - self.due_date).days
+
+
+class Fine(models.Model):
+    borrow = models.OneToOneField(
+        Borrow,
+        on_delete=models.CASCADE,
+        related_name='fine',
+        verbose_name='امانت'
+    )
+    amount = models.PositiveIntegerField(verbose_name='مبلغ جریمه (ریال)')
+    is_paid = models.BooleanField(default=False, verbose_name='پرداخت شده')
+    paid_date = models.DateField(null=True, blank=True, verbose_name='تاریخ پرداخت')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'جریمه'
+        verbose_name_plural = 'جریمه‌ها'
+        db_table = 'fines'
+
+    def __str__(self):
+        return f"جریمه {self.borrow} — {self.amount} ریال"
+
+
+class ImportLog(models.Model):
+    class Status(models.TextChoices):
+        SUCCESS = 'success', 'موفق'
+        PARTIAL = 'partial', 'جزئی'
+        FAILED = 'failed', 'ناموفق'
+
+    imported_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='import_logs',
+        verbose_name='وارد کننده'
+    )
+    file_name = models.CharField(max_length=255, verbose_name='نام فایل')
+    total_rows = models.PositiveIntegerField(verbose_name='تعداد کل ردیف‌ها')
+    success_count = models.PositiveIntegerField(verbose_name='موفق')
+    fail_count = models.PositiveIntegerField(verbose_name='ناموفق')
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        verbose_name='وضعیت'
+    )
+    error_details = models.JSONField(
+        null=True,
+        blank=True,
+        verbose_name='جزئیات خطاها'
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ورود')
+
+    class Meta:
+        verbose_name = 'لاگ ورود گروهی'
+        verbose_name_plural = 'لاگ‌های ورود گروهی'
+        db_table = 'import_logs'
+
+    def __str__(self):
+        return f"{self.file_name} — {self.status} — {self.created_at.date()}"

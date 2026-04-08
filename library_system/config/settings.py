@@ -59,7 +59,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'library_db',
         'USER': 'root',
-        'PASSWORD': 'your_password',  # پسورد MySQL خودت
+        'PASSWORD': '',  # پسورد MySQL خودت
         'HOST': 'localhost',
         'PORT': '3306',
     }
