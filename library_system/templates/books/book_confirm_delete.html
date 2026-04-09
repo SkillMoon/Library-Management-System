@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8"><title>حذف کتاب</title></head>
+<body>
+    <h2>آیا از حذف "{{ book.title }}" مطمئنی؟</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">بله، حذف شود</button>
+        <a href="{% url 'book_list' %}">انصراف</a>
+    </form>
+</body>
+</html>

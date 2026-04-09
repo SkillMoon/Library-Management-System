@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8"><title>لیست کتاب‌ها</title></head>
+<body>
+    <h2>لیست کتاب‌ها</h2>
+    {% if user.role in 'admin,librarian' %}
+        <a href="{% url 'book_create' %}">افزودن کتاب</a>
+    {% endif %}
+    <table border="1">
+        <tr>
+            <th>عنوان</th><th>نویسنده</th><th>ISBN</th><th>موجودی</th><th>عملیات</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.available_copies }}</td>
+            <td>
+                <a href="{% url 'book_detail' book.pk %}">جزئیات</a>
+                {% if user.role in 'admin,librarian' %}
+                    <a href="{% url 'book_edit' book.pk %}">ویرایش</a>
+                    <a href="{% url 'book_delete' book.pk %}">حذف</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

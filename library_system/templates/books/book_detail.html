@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8"><title>{{ book.title }}</title></head>
+<body>
+    <h2>{{ book.title }}</h2>
+    <p>نویسنده: {{ book.author }}</p>
+    <p>ISBN: {{ book.isbn }}</p>
+    <p>ناشر: {{ book.publisher }}</p>
+    <p>سال: {{ book.year }}</p>
+    <p>دسته‌بندی: {{ book.category }}</p>
+    <p>تعداد کل نسخه‌ها: {{ book.total_copies }}</p>
+    <h3>نسخه‌ها</h3>
+    <table border="1">
+        <tr><th>شناسه</th><th>وضعیت</th></tr>
+        {% for copy in copies %}
+        <tr><td>{{ copy.id }}</td><td>{{ copy.status }}</td></tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'book_list' %}">بازگشت</a>
+</body>
+</html>

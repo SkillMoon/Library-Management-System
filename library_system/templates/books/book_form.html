@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8"><title>{{ title }}</title></head>
+<body>
+    <h2>{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">ذخیره</button>
+        <a href="{% url 'book_list' %}">انصراف</a>
+    </form>
+</body>
+</html>
