@@ -6,5 +6,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('apps.accounts.urls')),
     path('books/', include('apps.books.urls')),
-    path('', lambda request: redirect('login')),
+    path('borrowing/', include('apps.borrowing.urls')),
+    path('', lambda request: redirect('accounts:login')),
 ]

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h4>پاسخ به درخواست امانت</h4>
+  <div class="card mb-3">
+    <div class="card-body">
+      <p><strong>کاربر:</strong> {{ borrow_request.user.get_full_name|default:borrow_request.user.username }}</p>
+      <p><strong>کتاب:</strong> {{ borrow_request.book.title }}</p>
+      <p><strong>تاریخ درخواست:</strong> {{ borrow_request.request_date|date:"Y/m/d" }}</p>
+      <p><strong>نسخه موجود:</strong> {{ borrow_request.book.available_copies }}</p>
+    </div>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">ثبت پاسخ</button>
+    <a href="{% url 'borrowing:borrow_request_list' %}" class="btn btn-secondary">بازگشت</a>
+  </form>
+</div>
+{% endblock %}

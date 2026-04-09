@@ -6,7 +6,7 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit">بله، حذف شود</button>
-        <a href="{% url 'book_list' %}">انصراف</a>
+        <a href="{% url 'books:book_list' %}">انصراف</a>
     </form>
 </body>
 </html>

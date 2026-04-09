@@ -6,21 +6,21 @@ from .forms import LoginForm
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('accounts:dashboard')  # ✅
 
     form = LoginForm(request, data=request.POST or None)
     if request.method == 'POST' and form.is_valid():
         user = form.get_user()
         login(request, user)
-        return redirect('dashboard')
+        return redirect('accounts:dashboard')  # ✅
 
     return render(request, 'accounts/login.html', {'form': form})
 
 
 def logout_view(request):
-    if request.method == 'POST':
-        logout(request)
-    return redirect('login')
+
+    logout(request)
+    return redirect('accounts:login')  # ✅
 
 
 @login_required(login_url='/accounts/login/')

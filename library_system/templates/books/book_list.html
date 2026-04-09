@@ -3,8 +3,8 @@
 <head><meta charset="UTF-8"><title>لیست کتاب‌ها</title></head>
 <body>
     <h2>لیست کتاب‌ها</h2>
-    {% if user.role in 'admin,librarian' %}
-        <a href="{% url 'book_create' %}">افزودن کتاب</a>
+    {% if user.role == 'admin' or user.role == 'librarian' %}
+        <a href="{% url 'books:book_create' %}">افزودن کتاب</a>
     {% endif %}
     <table border="1">
         <tr>
@@ -17,10 +17,10 @@
             <td>{{ book.isbn }}</td>
             <td>{{ book.available_copies }}</td>
             <td>
-                <a href="{% url 'book_detail' book.pk %}">جزئیات</a>
-                {% if user.role in 'admin,librarian' %}
-                    <a href="{% url 'book_edit' book.pk %}">ویرایش</a>
-                    <a href="{% url 'book_delete' book.pk %}">حذف</a>
+                <a href="{% url 'books:book_detail' book.pk %}">جزئیات</a>
+                {% if user.role == 'admin' or user.role == 'librarian' %}
+                    <a href="{% url 'books:book_edit' book.pk %}">ویرایش</a>
+                    <a href="{% url 'books:book_delete' book.pk %}">حذف</a>
                 {% endif %}
             </td>
         </tr>

@@ -9,7 +9,7 @@ from .forms import BookForm, BookCopyForm
 
 @login_required
 def book_list(request):
-    books = Book.objects.all().order_by('-id')
+    books = Book.objects.prefetch_related('copies').all().order_by('-id')
     return render(request, 'books/book_list.html', {'books': books})
 
 @role_required('admin', 'librarian')

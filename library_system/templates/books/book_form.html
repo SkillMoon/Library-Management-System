@@ -7,7 +7,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">ذخیره</button>
-        <a href="{% url 'book_list' %}">انصراف</a>
+        <a href="{% url 'books:book_list' %}">انصراف</a>
     </form>
 </body>
 </html>

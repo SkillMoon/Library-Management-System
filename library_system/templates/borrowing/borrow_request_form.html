@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h4>درخواست امانت کتاب</h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">ثبت درخواست</button>
+    <a href="{% url 'borrowing:my_requests' %}" class="btn btn-secondary">انصراف</a>
+  </form>
+</div>
+{% endblock %}
