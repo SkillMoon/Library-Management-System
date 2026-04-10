@@ -1,3 +1,5 @@
+# apps/books/models.py
+
 from django.db import models
 
 
@@ -37,6 +39,11 @@ class Book(models.Model):
         blank=True,
         verbose_name='تصویر جلد'
     )
+    # ✅ اضافه شد — طبق معماری PDF
+    total_copies = models.PositiveIntegerField(
+        default=1,
+        verbose_name='تعداد کل نسخه‌ها'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -49,17 +56,37 @@ class Book(models.Model):
 
     @property
     def available_copies(self):
-        return self.copies.filter(is_available=True).count()
+        # ✅ اصلاح شد — بر اساس status نه is_available
+        return self.copies.filter(status='available').count()
 
 
 class BookCopy(models.Model):
+
+    STATUS_CHOICES = [
+        ('available', 'موجود'),
+        ('borrowed', 'امانت داده شده'),
+        ('damaged', 'آسیب‌دیده'),
+    ]
+
     book = models.ForeignKey(
         Book,
         on_delete=models.CASCADE,
         related_name='copies',
         verbose_name='کتاب'
     )
-    is_available = models.BooleanField(default=True, verbose_name='موجود')
+    # ✅ اضافه شد — طبق معماری PDF
+    copy_code = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name='کد نسخه'
+    )
+    # ✅ جایگزین is_available — طبق معماری PDF
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='available',
+        verbose_name='وضعیت'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -68,4 +95,4 @@ class BookCopy(models.Model):
         db_table = 'book_copies'
 
     def __str__(self):
-        return f"نسخه {self.id} از {self.book.title}"
+        return f"{self.copy_code} — {self.book.title}"

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'books:book_list' %}">کتاب‌ها</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'books:book_detail' book.pk %}">{{ book.title }}</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'books:copy_list' book.pk %}">نسخه‌ها</a>
+      </li>
+      <li class="breadcrumb-item active">{{ title }}</li>
+    </ol>
+  </nav>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">{{ title }} — {{ book.title }}</h5>
+        </div>
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- copy_code -->
+            <div class="mb-3">
+              <label for="{{ form.copy_code.id_for_label }}" class="form-label fw-bold">
+                کد نسخه
+              </label>
+              {{ form.copy_code }}
+              {% if form.copy_code.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.copy_code.errors|join:", " }}
+                </div>
+              {% endif %}
+              <div class="form-text">مثال: BC-001 یا ISBN-001</div>
+            </div>
+
+            <!-- status -->
+            <div class="mb-3">
+              <label for="{{ form.status.id_for_label }}" class="form-label fw-bold">
+                وضعیت نسخه
+              </label>
+              {{ form.status }}
+              {% if form.status.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.status.errors|join:", " }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                ذخیره
+              </button>
+              <a href="{% url 'books:copy_list' book.pk %}"
+                 class="btn btn-outline-secondary">انصراف</a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

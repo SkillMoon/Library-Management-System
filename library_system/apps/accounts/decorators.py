@@ -1,7 +1,17 @@
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
+from functools import wraps
+
 
 def role_required(*roles):
-    def check_role(user):
-        return user.is_authenticated and user.role in roles
-    return user_passes_test(check_role, login_url='/accounts/login/')
+    """
+    دسترسی را بر اساس نقش کاربر کنترل می‌کند.
+    مثال: @role_required('admin', 'librarian')
+    """
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            if request.user.role not in roles:
+                raise PermissionDenied
+            return view_func(request, *args, **kwargs)
+        return wrapper
+    return decorator

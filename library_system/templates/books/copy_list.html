@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}نسخه‌های {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'books:book_list' %}">کتاب‌ها</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'books:book_detail' book.pk %}">{{ book.title }}</a>
+      </li>
+      <li class="breadcrumb-item active">نسخه‌ها</li>
+    </ol>
+  </nav>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>نسخه‌های فیزیکی — {{ book.title }}</h4>
+    <a href="{% url 'books:copy_create' book.pk %}" class="btn btn-success btn-sm">
+      + افزودن نسخه
+    </a>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-center border-success">
+        <div class="card-body py-2">
+          <h5 class="mb-0 text-success">
+            {{ copies|length }}
+          </h5>
+          <small class="text-muted">کل نسخه‌ها</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center border-primary">
+        <div class="card-body py-2">
+          <h5 class="mb-0 text-primary">
+            {{ copies|dictsort:"status"|first }}
+            {% with available=0 %}
+              {# شمارش available در template ممکن نیست — از context استفاده کن #}
+            {% endwith %}
+            {{ available_count }}
+          </h5>
+          <small class="text-muted">موجود</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center border-warning">
+        <div class="card-body py-2">
+          <h5 class="mb-0 text-warning">{{ borrowed_count }}</h5>
+          <small class="text-muted">امانت داده شده</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  {% if copies %}
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>کد نسخه</th>
+          <th>وضعیت</th>
+          <th>عملیات</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for copy in copies %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><code>{{ copy.copy_code }}</code></td>
+          <td>
+            {% if copy.status == 'available' %}
+              <span class="badge bg-success">موجود</span>
+            {% elif copy.status == 'borrowed' %}
+              <span class="badge bg-warning text-dark">امانت داده شده</span>
+            {% elif copy.status == 'damaged' %}
+              <span class="badge bg-danger">آسیب‌دیده</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'books:copy_edit' copy.pk %}"
+               class="btn btn-outline-primary btn-sm">ویرایش</a>
+            {% if copy.status != 'borrowed' %}
+            <a href="{% url 'books:copy_delete' copy.pk %}"
+               class="btn btn-outline-danger btn-sm">حذف</a>
+            {% else %}
+            <button class="btn btn-outline-secondary btn-sm" disabled
+                    title="نسخه در حال امانت است">حذف</button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">هیچ نسخه‌ای ثبت نشده است.</div>
+  {% endif %}
+
+</div>
+{% endblock %}

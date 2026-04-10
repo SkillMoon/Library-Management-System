@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}پروفایل من{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header">
+            <h5>پروفایل من</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">
+                نقش: <strong>{{ request.user.get_role_display }}</strong>
+                &nbsp;|&nbsp;
+                نام کاربری: <strong>{{ request.user.username }}</strong>
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
