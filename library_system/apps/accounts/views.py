@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import LoginForm, LibrarianForm, MemberForm, ProfileForm
-from .models import User
+from .models import User, ImportLog
 from .decorators import role_required
-
+import openpyxl
 
 # ─────────────────────────────────────────
 # Auth Views
@@ -192,3 +192,86 @@ def member_delete(request, pk):
     return render(request, 'accounts/member_confirm_delete.html', {
         'member': member
     })
+
+@login_required
+def import_users(request):
+    if request.user.role not in ['admin', 'librarian']:
+        return HttpResponseForbidden("دسترسی ندارید.")
+
+    if request.method == 'POST' and request.FILES.get('excel_file'):
+        excel_file = request.FILES['excel_file']
+
+        # فقط xlsx قبول می‌کنیم
+        if not excel_file.name.endswith('.xlsx'):
+            messages.error(request, 'فقط فایل xlsx قابل قبول است.')
+            return redirect('accounts:import_users')
+
+        wb = openpyxl.load_workbook(excel_file)
+        ws = wb.active
+
+        success_count = 0
+        fail_count = 0
+        errors = []
+
+        # ردیف اول هدر است، از ردیف دوم شروع می‌کنیم
+        for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+            # خواندن ستون‌ها
+            username    = str(row[0]).strip() if row[0] else None
+            first_name  = str(row[1]).strip() if row[1] else ''
+            last_name   = str(row[2]).strip() if row[2] else ''
+            email       = str(row[3]).strip() if row[3] else ''
+            role        = str(row[4]).strip() if row[4] else 'student'
+            national_id = str(row[5]).strip() if row[5] else None
+            phone       = str(row[6]).strip() if row[6] else ''
+
+            # اعتبارسنجی فیلدهای اجباری
+            if not username or not national_id:
+                errors.append(f"ردیف {row_num}: username یا national_id خالی است.")
+                fail_count += 1
+                continue
+
+            # role معتبر باشه
+            valid_roles = ['admin', 'librarian', 'student', 'professor']
+            if role not in valid_roles:
+                errors.append(f"ردیف {row_num}: role نامعتبر است ({role}).")
+                fail_count += 1
+                continue
+
+            # اگر username تکراری باشه skip می‌کنیم
+            if User.objects.filter(username=username).exists():
+                errors.append(f"ردیف {row_num}: username «{username}» تکراری است.")
+                fail_count += 1
+                continue
+
+            # ساخت کاربر — password = national_id
+            try:
+                user = User(
+                    username=username,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    role=role,
+                    national_id=national_id,
+                    phone=phone,
+                )
+                user.set_password(national_id)
+                user.save()
+                success_count += 1
+            except Exception as e:
+                errors.append(f"ردیف {row_num}: خطا — {str(e)}")
+                fail_count += 1
+
+        # ثبت ImportLog
+        ImportLog.objects.create(
+            imported_by=request.user,
+            file_name=excel_file.name,
+            total_rows=success_count + fail_count,
+            success_count=success_count,
+            fail_count=fail_count,
+            errors='\n'.join(errors),
+        )
+
+        messages.success(request, f"Import انجام شد: {success_count} موفق، {fail_count} ناموفق.")
+        return redirect('accounts:import_users')
+
+    return render(request, 'accounts/import_users.html')

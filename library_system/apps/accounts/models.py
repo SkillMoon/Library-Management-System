@@ -44,3 +44,26 @@ class User(AbstractUser):
         if self.role == self.Role.PROFESSOR:
             return 2000
         return 5000  # student و بقیه
+
+class ImportLog(models.Model):
+    imported_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='import_logs',
+        verbose_name='وارد کننده'
+    )
+    file_name = models.CharField(max_length=255, verbose_name='نام فایل')
+    total_rows = models.IntegerField(verbose_name='کل ردیف‌ها')
+    success_count = models.IntegerField(verbose_name='موفق')
+    fail_count = models.IntegerField(verbose_name='ناموفق')
+    errors = models.TextField(blank=True, verbose_name='خطاها')
+    imported_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان import')
+
+    class Meta:
+        verbose_name = 'لاگ import'
+        verbose_name_plural = 'لاگ‌های import'
+        db_table = 'import_logs'
+
+    def __str__(self):
+        return f"{self.file_name} - {self.imported_at:%Y-%m-%d %H:%M}"

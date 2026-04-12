@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Import کاربران{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Import کاربران از Excel</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>فایل Excel (xlsx):
+            <input type="file" name="excel_file" accept=".xlsx" required>
+        </label>
+        <br><br>
+        <button type="submit">آپلود و Import</button>
+    </form>
+
+    <hr>
+    <h4>فرمت فایل Excel</h4>
+    <table border="1">
+        <tr>
+            <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th>
+        </tr>
+        <tr>
+            <td>username</td>
+            <td>first_name</td>
+            <td>last_name</td>
+            <td>email</td>
+            <td>role</td>
+            <td>national_id</td>
+            <td>phone</td>
+        </tr>
+    </table>
+    <small>مقادیر معتبر role: admin, librarian, student, professor</small>
+    <br>
+    <small>رمز عبور هر کاربر برابر national_id او خواهد بود.</small>
+</div>
+{% endblock %}
