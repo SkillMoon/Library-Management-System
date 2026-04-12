@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>امانت‌های من</h2>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>کتاب</th>
+        <th>تاریخ امانت</th>
+        <th>موعد بازگشت</th>
+        <th>وضعیت</th>
+        <th>جریمه</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for borrow in borrows %}
+      <tr class="{% if borrow.is_overdue and borrow.status == 'active' %}table-danger{% endif %}">
+        <td>{{ borrow.book_copy.book.title }}</td>
+        <td>{{ borrow.borrow_date }}</td>
+        <td>{{ borrow.due_date }}</td>
+        <td>
+          {% if borrow.status == 'active' and borrow.is_overdue %}
+            <span class="badge bg-danger">تأخیر</span>
+          {% elif borrow.status == 'active' %}
+            <span class="badge bg-success">فعال</span>
+          {% else %}
+            <span class="badge bg-secondary">برگشت داده شده</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if borrow.fine %}
+            {{ borrow.fine.amount|floatformat:0 }} ریال
+            {% if borrow.fine.is_paid %}
+              <span class="badge bg-success">پرداخت شده</span>
+            {% else %}
+              <span class="badge bg-danger">پرداخت نشده</span>
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="text-center">امانتی ندارید.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

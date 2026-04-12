@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+  <h2>صدور امانت</h2>
+  <div class="card mb-3">
+    <div class="card-body">
+      <p><strong>کاربر:</strong> {{ borrow_request.user.get_full_name }}</p>
+      <p><strong>کتاب:</strong> {{ borrow_request.book.title }}</p>
+    </div>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <div class="text-danger">{{ field.errors }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">صدور امانت</button>
+    <a href="{% url 'borrowing:borrow_request_list' %}" class="btn btn-secondary">انصراف</a>
+  </form>
+</div>
+{% endblock %}

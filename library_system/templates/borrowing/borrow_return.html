@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+  <h2>ثبت بازگشت کتاب</h2>
+  <div class="card mb-3">
+    <div class="card-body">
+      <p><strong>کاربر:</strong> {{ borrow.user.get_full_name }}</p>
+      <p><strong>کتاب:</strong> {{ borrow.book_copy.book.title }}</p>
+      <p><strong>موعد بازگشت:</strong> {{ borrow.due_date }}</p>
+      {% if borrow.is_overdue %}
+        <div class="alert alert-danger">
+          تأخیر: {{ borrow.overdue_days }} روز
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label">{{ field.label }}</label>
+      {{ field }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-warning">ثبت بازگشت</button>
+    <a href="{% url 'borrowing:borrow_list' %}" class="btn btn-secondary">انصراف</a>
+  </form>
+</div>
+{% endblock %}

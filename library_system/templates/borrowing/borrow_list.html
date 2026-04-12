@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>لیست امانت‌های فعال</h2>
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>کاربر</th>
+        <th>کتاب</th>
+        <th>کد نسخه</th>
+        <th>تاریخ امانت</th>
+        <th>موعد بازگشت</th>
+        <th>وضعیت</th>
+        <th>عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for borrow in borrows %}
+      <tr class="{% if borrow.is_overdue %}table-danger{% endif %}">
+        <td>{{ borrow.user.get_full_name }}</td>
+        <td>{{ borrow.book_copy.book.title }}</td>
+        <td>{{ borrow.book_copy.copy_code }}</td>
+        <td>{{ borrow.borrow_date }}</td>
+        <td>{{ borrow.due_date }}</td>
+        <td>
+          {% if borrow.status == 'active' and borrow.is_overdue %}
+            <span class="badge bg-danger">تأخیر ({{ borrow.overdue_days }} روز)</span>
+          {% elif borrow.status == 'active' %}
+            <span class="badge bg-success">فعال</span>
+          {% else %}
+            <span class="badge bg-secondary">برگشت داده شده</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if borrow.status == 'active' %}
+            <a href="{% url 'borrowing:borrow_return' borrow.id %}" class="btn btn-sm btn-warning">ثبت بازگشت</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center">امانتی ثبت نشده.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
