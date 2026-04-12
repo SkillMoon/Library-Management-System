@@ -16,8 +16,35 @@ from .forms import BookForm, BookCopyForm
 @login_required
 def book_list(request):
     books = Book.objects.prefetch_related('copies').all().order_by('-id')
-    return render(request, 'books/book_list.html', {'books': books})
 
+    # ─── فیلترهای جستجوی پیشرفته (FR08) ───
+    title     = request.GET.get('title', '').strip()
+    author    = request.GET.get('author', '').strip()
+    publisher = request.GET.get('publisher', '').strip()
+    category  = request.GET.get('category', '').strip()
+    isbn      = request.GET.get('isbn', '').strip()
+
+    if title:
+        books = books.filter(title__icontains=title)
+    if author:
+        books = books.filter(author__icontains=author)
+    if publisher:
+        books = books.filter(publisher__icontains=publisher)
+    if category:
+        books = books.filter(category__icontains=category)
+    if isbn:
+        books = books.filter(isbn__icontains=isbn)
+
+    return render(request, 'books/book_list.html', {
+        'books': books,
+        'search': {
+            'title': title,
+            'author': author,
+            'publisher': publisher,
+            'category': category,
+            'isbn': isbn,
+        }
+    })
 
 @login_required
 def book_detail(request, pk):
