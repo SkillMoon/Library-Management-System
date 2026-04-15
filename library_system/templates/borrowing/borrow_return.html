@@ -14,6 +14,7 @@
       {% endif %}
     </div>
   </div>
+    <br>
   <form method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -22,8 +23,9 @@
       {{ field }}
     </div>
     {% endfor %}
-    <button type="submit" class="btn btn-warning">ثبت بازگشت</button>
-    <a href="{% url 'borrowing:borrow_list' %}" class="btn btn-secondary">انصراف</a>
+
+    <button type="submit" class="btn btn-outline-primary">ثبت بازگشت</button>
+    <a href="{% url 'borrowing:borrow_list' %}" class="btn btn-outline-red">انصراف</a>
   </form>
 </div>
 {% endblock %}

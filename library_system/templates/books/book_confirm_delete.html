@@ -1,12 +1,31 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head><meta charset="UTF-8"><title>حذف کتاب</title></head>
-<body>
-    <h2>آیا از حذف "{{ book.title }}" مطمئنی؟</h2>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">بله، حذف شود</button>
-        <a href="{% url 'books:book_list' %}">انصراف</a>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}حذف کتاب{% endblock %}
+{% block nav_books %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h4 class="page-title">حذف کتاب</h4>
+</div>
+
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+        <h5 class="mt-3">آیا از حذف این کتاب مطمئن هستید؟</h5>
+        <p class="text-muted">
+            <strong>{{ book.title }}</strong> — نوشته {{ book.author }}
+        </p>
+        <p class="text-danger small">این عملیات قابل بازگشت نیست.</p>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i> بله، حذف شود
+                </button>
+            </form>
+            <a href="{% url 'books:book_detail' book.pk %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle me-1"></i> انصراف
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

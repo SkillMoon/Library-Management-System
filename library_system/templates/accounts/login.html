@@ -1,18 +1,35 @@
-<!DOCTYPE html>
+{% load static %}
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>ورود به سیستم</title>
-</head>
-<body>
-    <h2>ورود به سیستم کتابخانه</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">ورود</button>
-    </form>
+  <title>ورود به سامانه</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+{% block content %}
+<div class="login-page">
+  <div class="login-container" role="form" aria-labelledby="login-heading">
+    <h2 id="login-heading">ورود به سامانه</h2>
     {% if form.errors %}
-        <p style="color:red">نام کاربری یا رمز عبور اشتباه است.</p>
+      <div class="alert alert-danger" role="alert">
+        {{form.errors}}
+      </div>
     {% endif %}
-</body>
-</html>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">نام کاربری</label>
+        {{ form.username }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">رمز عبور</label>
+        {{ form.password }}
+      </div>
+      <button type="submit" class="btn btn-primary">ورود</button>
+    </form>
+  </div>
+</div>
+</head>
+{% endblock %}

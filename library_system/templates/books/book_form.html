@@ -1,13 +1,25 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head><meta charset="UTF-8"><title>{{ title }}</title></head>
-<body>
-    <h2>{{ title }}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">ذخیره</button>
-        <a href="{% url 'books:book_list' %}">انصراف</a>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}
+  {% if form.instance.pk %}ویرایش کتاب{% else %}افزودن کتاب{% endif %}
+{% endblock %}
+{% block page_title %}
+  {% if form.instance.pk %}ویرایش کتاب{% else %}کتاب جدید{% endif %}
+{% endblock %}
+{% block content %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+      <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.errors %}
+          <div class="alert alert-danger">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">
+      {% if form.instance.pk %}بروزرسانی{% else %}افزودن{% endif %}
+    </button>
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-red">انصراف</a>
+  </form>
+{% endblock %}

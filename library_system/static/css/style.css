@@ -1,0 +1,471 @@
+/* ——————————————————————————————————————————————
+   1. CSS Reset & Box-Sizing
+   —————————————————————————————————————————————— */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ——————————————————————————————————————————————
+   2. رنگ‌ها و قلم پیش‌فرض
+   —————————————————————————————————————————————— */
+:root {
+  --color-bg: #FFFFFF;
+  --color-primary: #005BBB;
+  --color-secondary: #008CFF;
+  --color-text: #333333;
+  --color-light-gray: #F5F5F5;
+  --color-success: #28A745;
+  --color-danger: #DC3545;
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ——————————————————————————————————————————————
+   3. تایپوگرافی
+   —————————————————————————————————————————————— */
+body {
+  font-family: var(--font-family);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+/* لینک‌ها */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+/* تیترها */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text);
+  margin-bottom: 0.5em;
+}
+
+/* ——————————————————————————————————————————————
+   4. دکمه‌ها (Buttons)
+   —————————————————————————————————————————————— */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 1em;
+  font-size: 1rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn:focus {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.btn-primary:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+/* Outline */
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn-outline:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Icon-only */
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 0.25em;
+  font-size: 1.25rem;
+}
+
+/* ——————————————————————————————————————————————
+   5. ساختار کلی لایه‌بندی (Layout)
+   —————————————————————————————————————————————— */
+
+/* هدر */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em 1em;
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.header__logo {
+  height: 2.5rem;
+  margin-left: 0.5em;
+}
+.header__user {
+  margin-right: 1em;
+}
+
+/* کانتینر کل صفحات */
+.layout {
+  display: flex;
+  min-height: calc(100vh - 3.5rem); /* header height ~3.5rem */
+}
+
+/* منوی کناری */
+.sidebar {
+  width: 16rem;
+  background-color: var(--color-light-gray);
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+/* محتوا */
+.content {
+  flex: 1;
+  padding: 1rem;
+  background-color: var(--color-bg);
+}
+
+/* عنوان صفحه */
+.page-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ——————————————————————————————————————————————
+   6. فرم‌ها (Forms) و ارورها
+   —————————————————————————————————————————————— */
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  margin-bottom: 0.25em;
+  font-weight: 500;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+.alert {
+  padding: 0.75em 1em;
+  border-radius: 4px;
+  margin-top: 1em;
+}
+.alert-danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+.alert-success {
+  background: var(--color-success);
+  color: #fff;
+}
+
+/* ——————————————————————————————————————————————
+   7. جداول
+   —————————————————————————————————————————————— */
+.table-responsive {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+thead {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+th, td {
+  padding: 0.75em;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* ——————————————————————————————————————————————
+   8. صفحه ورود
+   —————————————————————————————————————————————— */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--color-light-gray);
+}
+.login-container {
+  background: #fff;
+  padding: 2rem;
+  max-width: 24rem;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-align: center;
+}
+.login-logo {
+  max-width: 6rem;
+  margin-bottom: 1rem;
+}
+
+/* ——————————————————————————————————————————————
+   9. ریسپانسیو (Mobile-First)
+   —————————————————————————————————————————————— */
+/* موبایل: منوی کناری مخفی */
+@media (max-width: 575.98px) {
+  .sidebar {
+    position: fixed;
+    top: 3.5rem;
+    left: 0;
+    height: calc(100% - 3.5rem);
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* تبلت کوچک به بالا */
+@media (min-width: 576px) {
+  .sidebar.collapsed {
+    transform: translateX(0);
+  }
+}
+
+/* ------------ Sidebar ------------ */
+#sidebar {
+  background-color: var(--blue-secondary);
+  color: #fff;
+  width: 240px;
+  min-width: 240px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+#sidebar.collapsed {
+  width: 0px;
+  min-width: 0px;
+}
+#sidebar ul li {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+}
+#sidebar ul li i,
+#sidebar ul li .icon {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+#sidebar.collapsed ul li span {
+  display: none;
+}
+
+/* ------------ Header & Toggle Button ------------ */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* ------------ Dashboard Cards ------------ */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.dashboard-cards .card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.dashboard-cards .card h3 {
+  font-size: 1rem;
+  color: var(--blue-primary);
+  margin-bottom: 0.5rem;
+}
+.dashboard-cards .card p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--gray-dark);
+}
+
+/* ------------ Layout adjustments ------------ */
+.layout {
+  display: flex;
+}
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  padding: 1rem;
+  background: var(--gray-light);
+  min-height: calc(100vh - 60px); /* اگر هدر 60px باشد */
+}
+
+/* کلاس فعال برای حالت Collapsed */
+#sidebar.collapsed ~ .main-content header .btn-icon {
+  transform: rotate(180deg);
+}
+
+
+
+
+/* استایل داشبورد کتابدار */
+.page-header {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: white;
+}
+
+.page-header h4 {
+    font-weight: 600;
+    margin: 0;
+}
+
+.badge.bg-primary {
+    background-color: #fff !important;
+    color: #6c5ce7;
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+}
+
+.card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    background: #fff;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card h6 {
+    font-weight: 600;
+    color: #2d3436;
+}
+.underline:hover {
+    text-decoration: underline;
+}
+.nav-link:hover{
+    text-decoration: underline;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn i {
+    vertical-align: middle;
+}
+
+/* رنگ‌بندی دکمه‌ها */
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color : white
+}
+.btn-outline-red:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color : white
+}
+.btn-outline-success:hover {
+    background-color: green;
+    border-color: white;
+    color : white
+}
+.btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+}
+/* آیکون‌ها */
+.bi {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .bi {
+    transform: scale(1.1);
+}
+
+/* رسپانسیو */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .page-header {
+        padding: 1rem;
+    }
+}
+.hide-on-mobile {
+
+}
+
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+}

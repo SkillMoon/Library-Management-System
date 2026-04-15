@@ -1,61 +1,51 @@
 {% extends 'base.html' %}
-{% block title %}حذف نسخه {% endblock %}
+
+{% block title %}حذف نسخه {{ copy.copy_code }}{% endblock %}
+
+{% block nav_books %}active{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card border-danger shadow-sm">
-        <div class="card-header bg-danger text-white">
-          <h5 class="mb-0">تأیید حذف نسخه</h5>
-        </div>
-        <div class="card-body">
-
-          <p class="mb-1">آیا از حذف این نسخه مطمئن هستید؟</p>
-          <ul class="list-group list-group-flush mb-4">
-            <li class="list-group-item">
-              <strong>کتاب:</strong> {{ book.title }}
-            </li>
-            <li class="list-group-item">
-              <strong>کد نسخه:</strong> <code>{{ copy.copy_code }}</code>
-            </li>
-            <li class="list-group-item">
-              <strong>وضعیت:</strong>
-              {% if copy.status == 'available' %}
-                <span class="badge bg-success">موجود</span>
-              {% elif copy.status == 'borrowed' %}
-                <span class="badge bg-warning text-dark">امانت داده شده</span>
-              {% elif copy.status == 'damaged' %}
-                <span class="badge bg-danger">آسیب‌دیده</span>
-              {% endif %}
-            </li>
-          </ul>
-
-          {% if copy.status == 'borrowed' %}
-          <!-- این حالت نباید پیش بیاد چون دکمه حذف disabled بود — ولی guard اضافه -->
-          <div class="alert alert-danger">
-            این نسخه در حال امانت است و قابل حذف نیست.
-          </div>
-          <a href="{% url 'books:copy_list' book.pk %}"
-             class="btn btn-secondary">بازگشت</a>
-          {% else %}
-          <form method="post">
-            {% csrf_token %}
-            <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-danger">
-                بله، حذف کن
-              </button>
-              <a href="{% url 'books:copy_list' book.pk %}"
-                 class="btn btn-outline-secondary">انصراف</a>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card border-danger">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="mb-2">حذف نسخه</h5>
+                <p class="text-muted mb-1">آیا از حذف این نسخه مطمئن هستید؟</p>
+                <div class="alert alert-light border mt-3 mb-4 text-start">
+                    <div class="mb-1">
+                        <span class="text-muted">کد نسخه:</span>
+                        <strong class="ms-2">{{ copy.copy_code }}</strong>
+                    </div>
+                    <div class="mb-1">
+                        <span class="text-muted">کتاب:</span>
+                        <strong class="ms-2">{{ copy.book.title }}</strong>
+                    </div>
+                    <div>
+                        <span class="text-muted">وضعیت:</span>
+                        <strong class="ms-2">{{ copy.get_status_display }}</strong>
+                    </div>
+                </div>
+                {% if copy.status == 'borrowed' %}
+                <div class="alert alert-warning text-start">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    این نسخه در حال حاضر امانت داده شده است. حذف آن ممکن است مشکل ایجاد کند.
+                </div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{% url 'books:copy_list' book_pk=copy.book.pk %}"
+                           class="btn btn-outline-secondary">انصراف</a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>بله، حذف شود
+                        </button>
+                    </div>
+                </form>
             </div>
-          </form>
-          {% endif %}
-
         </div>
-      </div>
     </div>
-  </div>
-
 </div>
 {% endblock %}

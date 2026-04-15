@@ -1,0 +1,145 @@
+<nav aria-label="لینک‌های اصلی">
+  <ul class="nav-list">
+    {% if user.role == 'admin' %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:dashboard' %}">
+          داشبورد
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:profile' %}">
+          پروفایل
+        </a>
+      </li>
+      <li class="nav-item">
+
+        <a class="nav-link" href="{% url 'accounts:librarian_list' %}">
+          مدیریت کتابداران
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:member_list' %}">
+          مدیریت کاربران
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:import_users' %}">
+          ورود گروهی کاربران
+        </a>
+      </li>
+            <li class="nav-item">
+        <a class="nav-link" href="{% url 'books:book_list' %}">
+          مدیریت کتاب‌ها
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:borrow_direct_issue' %}">
+          امانت مستقیم
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:borrow_request_list' %}">
+          درخواست‌های امانت
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:fine_list' %}">
+           جریمه‌ها
+        </a>
+      </li>
+    {% endif %}
+
+    {% if user.role == 'librarian' %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:dashboard' %}">
+          داشبورد
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:profile' %}">
+          پروفایل
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:member_list' %}">
+          مدیریت کاربران
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:import_users' %}">
+          ورود گروهی کاربران
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'books:book_list' %}">
+          مدیریت کتاب‌ها
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:borrow_list' %}">
+          امانت ها
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:borrow_direct_issue' %}">
+          امانت مستقیم
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:borrow_request_list' %}">
+          درخواست‌های آنلاین
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:fine_list' %}">
+           جریمه‌ها
+        </a>
+      </li>
+
+    {% endif %}
+
+    {% if user.role == 'student' or user.role == 'professor' %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:dashboard' %}">
+          داشبورد
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:profile' %}">
+          پروفایل
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'books:book_list' %}">
+          کتاب ها
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:my_borrows' %}">
+          امانت های من
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:borrow_request_create' %}">
+          درخواست امانت کتاب
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'borrowing:my_requests' %}">
+          درخواست های من
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>

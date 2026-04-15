@@ -13,10 +13,11 @@
             </p>
             <form method="post">
                 {% csrf_token %}
+                <br>
                 <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-danger">بله، حذف کن</button>
+                    <button type="submit" class="btn btn-outline btn-outline-primary">بله، حذف کن</button>
                     <a href="{% url 'accounts:member_list' %}"
-                       class="btn btn-secondary">انصراف</a>
+                       class="btn btn-outline-red">انصراف</a>
                 </div>
             </form>
         </div>

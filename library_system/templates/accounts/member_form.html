@@ -22,9 +22,10 @@
                     </div>
                 {% endfor %}
                 <div class="d-flex gap-2">
+                    <br>
                     <button type="submit" class="btn btn-primary">ذخیره</button>
-                    <a href="{% url 'accounts:member_list' %}"
-                       class="btn btn-secondary">انصراف</a>
+                    <a href="{% url 'accounts:dashboard' %}"
+                       class="btn btn-outline-red">انصراف</a>
                 </div>
             </form>
         </div>

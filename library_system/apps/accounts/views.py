@@ -42,7 +42,7 @@ def dashboard_view(request):
         'student':   'accounts/dashboard_student.html',
         'professor': 'accounts/dashboard_professor.html',
     }
-    template = templates.get(role, 'accounts/dashboard_student.html')
+    template = templates.get(role, 'accounts/dashboard.html')
     return render(request, template, {'user': request.user})
 
 
@@ -56,7 +56,7 @@ def profile_view(request):
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, 'پروفایل با موفقیت بروزرسانی شد.')
+
             return redirect('accounts:profile')
     else:
         form = ProfileForm(instance=request.user)

@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
 <div class="container mt-4">
   <h2>لیست امانت‌های فعال</h2>
   <table class="table table-bordered table-hover">
@@ -33,7 +41,7 @@
         </td>
         <td>
           {% if borrow.status == 'active' %}
-            <a href="{% url 'borrowing:borrow_return' borrow.id %}" class="btn btn-sm btn-warning">ثبت بازگشت</a>
+            <a href="{% url 'borrowing:borrow_return' borrow.id %}" class="btn btn-outline">ثبت بازگشت</a>
           {% endif %}
         </td>
       </tr>

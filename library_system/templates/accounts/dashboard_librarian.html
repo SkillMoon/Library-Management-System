@@ -1,17 +1,80 @@
 {% extends 'base.html' %}
 {% block title %}داشبورد کتابدار{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
 {% block content %}
-<div class="card p-4">
+<div class="page-header">
     <h4>خوش آمدید، {{ user.get_full_name|default:user.username }}</h4>
-    <p class="text-muted">نقش: کتابدار</p>
-    <hr>
-    <div class="row g-3">
-        <div class="col-md-3">
-            <a href="{% url 'books:book_list' %}" class="btn btn-primary w-100">مدیریت کتاب‌ها</a>
-        </div>
-        <div class="col-md-3">
-            <a href="{% url 'borrowing:borrow_request_list' %}" class="btn btn-warning w-100">درخواست‌های امانت</a>
+    <span class="badge bg-danger">کتابدار</span>
+</div>
+
+<div class="row g-4 mt-1">
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-book fs-4 text-primary"></i>
+                    <h6 class="mb-0">مدیریت کتاب‌ها</h6>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{% url 'books:book_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-list-ul me-1"></i> لیست کتاب‌ها
+                    </a>
+                    <a href="{% url 'books:book_create' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> افزودن کتاب
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-arrow-left-right fs-4 text-warning"></i>
+                    <h6 class="mb-0">مدیریت امانت‌ها</h6>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{% url 'borrowing:borrow_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-arrow-left-right me-1"></i> لیست امانت‌ها
+                    </a>
+                    <a href="{% url 'borrowing:borrow_request_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-inbox me-1"></i> درخواست‌های امانت
+                    </a>
+                    <a href="{% url 'borrowing:borrow_direct_issue' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> ثبت امانت مستقیم
+                    </a>
+                    <a href="{% url 'borrowing:fine_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-cash-coin me-1"></i> لیست جریمه‌ها
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-people fs-4 text-success"></i>
+                    <h6 class="mb-0">مدیریت اعضا</h6>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{% url 'accounts:member_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-people me-1"></i> لیست اعضا
+                    </a>
+                    <a href="{% url 'accounts:member_create' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-person-plus me-1"></i> افزودن عضو
+                    </a>
+                    <a href="{% url 'accounts:import_users' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-upload me-1"></i> ورود دسته‌ای (Excel)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

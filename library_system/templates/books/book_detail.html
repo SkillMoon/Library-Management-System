@@ -1,21 +1,97 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head><meta charset="UTF-8"><title>{{ book.title }}</title></head>
-<body>
-    <h2>{{ book.title }}</h2>
-    <p>نویسنده: {{ book.author }}</p>
-    <p>ISBN: {{ book.isbn }}</p>
-    <p>ناشر: {{ book.publisher }}</p>
-    <p>سال: {{ book.year }}</p>
-    <p>دسته‌بندی: {{ book.category }}</p>
-    <p>تعداد کل نسخه‌ها: {{ book.total_copies }}</p>
-    <h3>نسخه‌ها</h3>
-    <table border="1">
-        <tr><th>شناسه</th><th>وضعیت</th></tr>
-        {% for copy in copies %}
-        <tr><td>{{ copy.id }}</td><td>{{ copy.status }}</td></tr>
-        {% endfor %}
-    </table>
-    <a href="{% url 'books:book_list' %}">بازگشت</a>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block nav_books %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h4 class="page-title">جزئیات کتاب</h4>
+    <div class="d-flex gap-2">
+        {% if user.role == 'admin' or user.role == 'librarian' %}
+        <a href="{% url 'books:book_edit' book.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i> ویرایش
+        </a>
+        <a href="{% url 'books:book_delete' book.pk %}" class="btn btn-danger">
+            <i class="bi bi-trash me-1"></i> حذف
+        </a>
+        {% endif %}
+        <a href="{% url 'books:book_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-right me-1"></i> بازگشت
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <p class="mb-2"><strong>عنوان:</strong> {{ book.title }}</p>
+                <p class="mb-2"><strong>نویسنده:</strong> {{ book.author }}</p>
+                <p class="mb-2"><strong>ISBN:</strong> {{ book.isbn }}</p>
+                <p class="mb-2"><strong>موضوع:</strong> {{ book.category }}</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-2"><strong>ناشر:</strong> {{ book.publisher|default:"—" }}</p>
+                <p class="mb-2"><strong>سال انتشار:</strong> {{ book.publish_year|default:"—" }}</p>
+                <p class="mb-2"><strong>تعداد کل نسخه‌ها:</strong> {{ book.total_copies }}</p>
+                <p class="mb-2"><strong>نسخه‌های موجود:</strong> {{ book.available_copies }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-layers me-2"></i> نسخه‌های فیزیکی</span>
+        {% if user.role == 'admin' or user.role == 'librarian' %}
+        <a href="{% url 'books:copy_create' book.pk %}" class="btn btn-sm btn-success">
+            <i class="bi bi-plus-circle me-1"></i> افزودن نسخه
+        </a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>کد نسخه</th>
+                    <th>وضعیت</th>
+                    {% if user.role == 'admin' or user.role == 'librarian' %}
+                    <th>عملیات</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for copy in copies %}
+                <tr>
+                    <td>{{ copy.copy_code }}</td>
+                    <td>
+                        {% if copy.status == 'available' %}
+                            <span class="badge bg-success">موجود</span>
+                        {% elif copy.status == 'borrowed' %}
+                            <span class="badge bg-warning text-dark">امانت داده شده</span>
+                        {% else %}
+                            <span class="badge bg-danger">آسیب‌دیده</span>
+                        {% endif %}
+                    </td>
+                    {% if user.role == 'admin' or user.role == 'librarian' %}
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{% url 'books:copy_edit' copy.pk %}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'books:copy_delete' copy.pk %}" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">هیچ نسخه‌ای ثبت نشده.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

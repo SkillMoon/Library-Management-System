@@ -1,74 +1,175 @@
 {% extends 'base.html' %}
 {% block title %}لیست کتاب‌ها{% endblock %}
-
+{% block page_title %}لیست کتاب‌ها{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h2>لیست کتاب‌ها</h2>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
 
-    {% if user.role == 'admin' or user.role == 'librarian' %}
-        <a href="{% url 'books:book_create' %}">افزودن کتاب</a>
-    {% endif %}
-
-    <!-- ─── فرم جستجوی پیشرفته (FR08) ─── -->
-    <form method="get" action="" style="margin: 16px 0; padding: 12px; border: 1px solid #ccc;">
-        <strong>جستجوی پیشرفته</strong>
-        <br><br>
-        <label>عنوان:
-            <input type="text" name="title" value="{{ search.title }}">
-        </label>
-        &nbsp;
-        <label>نویسنده:
-            <input type="text" name="author" value="{{ search.author }}">
-        </label>
-        &nbsp;
-        <label>ناشر:
-            <input type="text" name="publisher" value="{{ search.publisher }}">
-        </label>
-        &nbsp;
-        <label>دسته‌بندی:
-            <input type="text" name="category" value="{{ search.category }}">
-        </label>
-        &nbsp;
-        <label>ISBN:
-            <input type="text" name="isbn" value="{{ search.isbn }}">
-        </label>
-        &nbsp;
-        <button type="submit">جستجو</button>
-        <a href="{% url 'books:book_list' %}">پاک کردن فیلترها</a>
-    </form>
-
-    <!-- ─── جدول کتاب‌ها ─── -->
-    <table border="1">
+{% if user.role == 'admin' or user.role == 'librarian'%}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-search me-2"></i> جستجوی پیشرفته
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url 'books:book_list' %}">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">عنوان</label>
+                    <input type="text" class="form-control" name="title" value="{{ search.title|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">نویسنده</label>
+                    <input type="text" class="form-control" name="author" value="{{ search.author|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">ناشر</label>
+                    <input type="text" class="form-control" name="publisher" value="{{ search.publisher|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">موضوع</label>
+                    <input type="text" class="form-control" name="subject" value="{{ search.subject|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">ISBN</label>
+                    <input type="text" class="form-control" name="isbn" value="{{ search.isbn|default:'' }}">
+                </div>
+                <br>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> جستجو
+                    </button>
+                    <a href="{% url 'books:book_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-1"></i> پاک کردن فیلترها
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+  <div class="mb-3">
+    <a href="{% url 'books:book_create' %}" class="btn btn-primary">کتاب جدید</a>
+  </div>
+  <div class="table-responsive">
+    <table>
+      <thead>
         <tr>
-            <th>عنوان</th>
-            <th>نویسنده</th>
-            <th>ISBN</th>
-            <th>ناشر</th>
-            <th>دسته‌بندی</th>
-            <th>موجودی</th>
-            <th>عملیات</th>
+          <th>عنوان</th>
+          <th>نویسنده</th>
+          <th>انتشارات</th>
+          <th>موضوع</th>
+          <th>شابک</th>
+          <th>سال</th>
+          <th>تعداد نسخه ها</th>
+          <th>عملیات</th>
         </tr>
+      </thead>
+      <tbody>
         {% for book in books %}
         <tr>
-            <td>{{ book.title }}</td>
-            <td>{{ book.author }}</td>
-            <td>{{ book.isbn }}</td>
-            <td>{{ book.publisher|default:"—" }}</td>
-            <td>{{ book.category|default:"—" }}</td>
-            <td>{{ book.available_copies }}</td>
-            <td>
-                <a href="{% url 'books:book_detail' book.pk %}">جزئیات</a>
-                {% if user.role == 'admin' or user.role == 'librarian' %}
-                    <a href="{% url 'books:book_edit' book.pk %}">ویرایش</a>
-                    <a href="{% url 'books:book_delete' book.pk %}">حذف</a>
-                {% endif %}
-            </td>
+          <td><a href="{% url 'books:copy_list' book.pk %}" >{{ book.title }}</a></td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.category }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.publish_year }}</td>
+          <td>{{ book.total_copies }}</td>
+          <td>
+            <a href="{% url 'books:book_edit' book.pk %}" class="btn btn-outline">ویرایش</a>
+            <a href="{% url 'books:book_delete' book.pk %}" class="btn btn-outline-red">حذف</a>
+          </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="7">هیچ کتابی یافت نشد.</td>
+          <td colspan="8" class="text-center">کتابی یافت نشد</td>
         </tr>
         {% endfor %}
+      </tbody>
     </table>
+  </div>
+{% endif %}
+{% if user.role == 'student' or ser.role == 'professor'%}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-search me-2"></i> جستجوی پیشرفته
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url 'books:book_list' %}">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">عنوان</label>
+                    <input type="text" class="form-control" name="title" value="{{ search.title|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">نویسنده</label>
+                    <input type="text" class="form-control" name="author" value="{{ search.author|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">ناشر</label>
+                    <input type="text" class="form-control" name="publisher" value="{{ search.publisher|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">موضوع</label>
+                    <input type="text" class="form-control" name="subject" value="{{ search.subject|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">ISBN</label>
+                    <input type="text" class="form-control" name="isbn" value="{{ search.isbn|default:'' }}">
+                </div>
+                <br>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> جستجو
+                    </button>
+                    <a href="{% url 'books:book_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-1"></i> پاک کردن فیلترها
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+<br>
+  <div class="mb-3">
+    <a href="{% url 'books:book_create' %}" class="btn btn-primary">کتاب جدید</a>
+  </div>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>عنوان</th>
+          <th>نویسنده</th>
+          <th>انتشارات</th>
+          <th>موضوع</th>
+          <th>شابک</th>
+          <th>سال</th>
+          <th>تعداد نسخه ها</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.category }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.publish_year }}</td>
+          <td>{{ book.total_copies }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">کتابی یافت نشد</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
 {% endblock %}
