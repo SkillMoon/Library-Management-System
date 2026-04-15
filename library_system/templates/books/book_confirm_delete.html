@@ -18,13 +18,13 @@
         <div class="d-flex justify-content-center gap-3 mt-4">
             <form method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-trash me-1"></i> بله، حذف شود
-                </button>
+                <br>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-outline btn-outline-primary">بله، حذف کن</button>
+                    <a href="{% url 'books:book_detail' book.pk %}"
+                       class="btn btn-outline-red">انصراف</a>
+                </div>
             </form>
-            <a href="{% url 'books:book_detail' book.pk %}" class="btn btn-secondary">
-                <i class="bi bi-x-circle me-1"></i> انصراف
-            </a>
         </div>
     </div>
 </div>

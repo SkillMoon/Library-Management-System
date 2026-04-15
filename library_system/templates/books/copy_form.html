@@ -24,6 +24,6 @@
     <button type="submit" class="btn btn-primary">
       {% if form.instance.pk %}بروزرسانی{% else %}افزودن{% endif %}
     </button>
-    <a href="{% url 'books:copy_list' book_pk=book.pk %}" class="btn btn-outline-red">انصراف</a>
+    <a href="{% url 'books:book_detail' book.pk %}" class="btn btn-outline-red">انصراف</a>
   </form>
 {% endblock %}

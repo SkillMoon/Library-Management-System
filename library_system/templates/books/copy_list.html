@@ -20,21 +20,19 @@
         <tr>
           <th>شناسه نسخه</th>
           <th>وضعیت</th>
-          <th>محل قرارگیری</th>
           <th>عملیات</th>
         </tr>
       </thead>
       <tbody>
         {% for copy in copies %}
         <tr>
-          <td>{{ copy.pk }}</td>
+          <td>{{ copy.copy_code }}</td>
           <td>{{ copy.get_status_display }}</td>
-          <td>{{ copy.location }}</td>
           <td>
             <a href="{% url 'books:copy_edit' pk=copy.pk %}"
-               class="btn btn-outline">ویرایش</a>
+               class="btn btn-outline btn-outline-primary">ویرایش</a>
             <a href="{% url 'books:copy_delete' pk=copy.pk %}"
-               class="btn btn-danger">حذف</a>
+               class="btn btn-outline-red">حذف</a>
           </td>
         </tr>
         {% empty %}

@@ -5,6 +5,7 @@
 {% block content %}
 <div class="page-header">
     <h4 class="page-title">جزئیات کتاب</h4>
+    <br>
     <div class="d-flex gap-2">
         {% if user.role == 'admin' or user.role == 'librarian' %}
         <a href="{% url 'books:book_edit' book.pk %}" class="btn btn-warning">
@@ -34,6 +35,7 @@
                 <p class="mb-2"><strong>سال انتشار:</strong> {{ book.publish_year|default:"—" }}</p>
                 <p class="mb-2"><strong>تعداد کل نسخه‌ها:</strong> {{ book.total_copies }}</p>
                 <p class="mb-2"><strong>نسخه‌های موجود:</strong> {{ book.available_copies }}</p>
+                <p class="mb-2"><strong>درباره کتاب:<br></strong> {{ book.description }}</p>
             </div>
         </div>
     </div>
@@ -41,13 +43,18 @@
 
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-layers me-2"></i> نسخه‌های فیزیکی</span>
         {% if user.role == 'admin' or user.role == 'librarian' %}
-        <a href="{% url 'books:copy_create' book.pk %}" class="btn btn-sm btn-success">
+        <br>
+        <span><i class="bi bi-layers me-2"></i> نسخه‌های فیزیکی</span>
+        <br>
+        <br>
+
+        <a href="{% url 'books:copy_create' book.pk %}" class="btn btn-primary">
             <i class="bi bi-plus-circle me-1"></i> افزودن نسخه
         </a>
         {% endif %}
     </div>
+    {% if user.role == 'admin' or user.role == 'librarian' %}
     <div class="card-body">
         <table class="table table-hover table-striped">
             <thead>
@@ -74,14 +81,10 @@
                     </td>
                     {% if user.role == 'admin' or user.role == 'librarian' %}
                     <td>
-                        <div class="d-flex gap-1">
-                            <a href="{% url 'books:copy_edit' copy.pk %}" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="{% url 'books:copy_delete' copy.pk %}" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </div>
+                        <a href="{% url 'books:copy_edit' pk=copy.pk %}"
+                        class="btn btn-outline btn-outline-primary">ویرایش</a>
+                        <a href="{% url 'books:copy_delete' pk=copy.pk %}"
+                        class="btn btn-outline btn-outline-red">حذف</a>
                     </td>
                     {% endif %}
                 </tr>
@@ -93,5 +96,6 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

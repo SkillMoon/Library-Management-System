@@ -5,8 +5,9 @@
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+      <br>
     <button type="submit" class="btn btn-primary">ثبت درخواست</button>
-    <a href="{% url 'borrowing:my_requests' %}" class="btn btn-secondary">انصراف</a>
+    <a href="{% url 'borrowing:my_requests' %}" class="btn btn-outline-red">انصراف</a>
   </form>
 </div>
 {% endblock %}

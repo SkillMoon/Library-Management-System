@@ -163,7 +163,7 @@ def borrow_return(request, borrow_id):
 def borrow_list(request):
     borrows = Borrow.objects.select_related(
         'user', 'book_copy__book', 'fine'
-    ).order_by('-borrow_date')
+    ).order_by('status')
     return render(request, 'borrowing/borrow_list.html', {'borrows': borrows})
 
 
@@ -171,7 +171,7 @@ def borrow_list(request):
 def my_borrows(request):
     borrows = Borrow.objects.filter(
         user=request.user
-    ).select_related('book_copy__book', 'fine').order_by('-borrow_date')
+    ).select_related('book_copy__book', 'fine').order_by('status')
     return render(request, 'borrowing/my_borrows.html', {'borrows': borrows})
 
 @login_required

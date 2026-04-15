@@ -73,7 +73,7 @@
       <tbody>
         {% for book in books %}
         <tr>
-          <td><a href="{% url 'books:copy_list' book.pk %}" >{{ book.title }}</a></td>
+          <td><a href="{% url 'books:book_detail' book.pk %}" >{{ book.title }}</a></td>
           <td>{{ book.author }}</td>
           <td>{{ book.publisher }}</td>
           <td>{{ book.category }}</td>
@@ -81,8 +81,8 @@
           <td>{{ book.publish_year }}</td>
           <td>{{ book.total_copies }}</td>
           <td>
-            <a href="{% url 'books:book_edit' book.pk %}" class="btn btn-outline">ویرایش</a>
-            <a href="{% url 'books:book_delete' book.pk %}" class="btn btn-outline-red">حذف</a>
+            <a href="{% url 'books:book_edit' book.pk %}" class="btn btn-outline btn-outline-primary">ویرایش</a>
+            <a href="{% url 'books:book_delete' book.pk %}" class="btn btn-outline btn-outline-red">حذف</a>
           </td>
         </tr>
         {% empty %}
@@ -136,9 +136,6 @@
     </div>
 </div>
 <br>
-  <div class="mb-3">
-    <a href="{% url 'books:book_create' %}" class="btn btn-primary">کتاب جدید</a>
-  </div>
   <div class="table-responsive">
     <table>
       <thead>
@@ -155,7 +152,7 @@
       <tbody>
         {% for book in books %}
         <tr>
-          <td>{{ book.title }}</td>
+          <td><a href="{% url 'books:book_detail' book.pk %}" >{{ book.title }}</a></td>
           <td>{{ book.author }}</td>
           <td>{{ book.publisher }}</td>
           <td>{{ book.category }}</td>
