@@ -23,7 +23,7 @@
           <form method="post" novalidate>
             {% csrf_token %}
 
-            <div class="mb-3">
+            <div class="form-group">
               <label class="form-label fw-bold">{{ form.user.label }}</label>
               {{ form.user }}
               {% if form.user.errors %}
@@ -31,7 +31,7 @@
               {% endif %}
             </div>
 
-            <div class="mb-3">
+            <div class="form-group">
               <label class="form-label fw-bold">{{ form.book_copy.label }}</label>
               {{ form.book_copy }}
               {% if form.book_copy.errors %}

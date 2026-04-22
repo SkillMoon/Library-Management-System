@@ -38,13 +38,6 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.get_full_name()} ({self.role})"
 
-    @property
-    def fine_rate(self):
-        """نرخ جریمه روزانه بر اساس نقش"""
-        if self.role == self.Role.PROFESSOR:
-            return 2000
-        return 5000  # student و بقیه
-
 class ImportLog(models.Model):
     imported_by = models.ForeignKey(
         User,

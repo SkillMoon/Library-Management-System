@@ -59,7 +59,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'library_db',
         'USER': 'root',
-        'PASSWORD': '',  # پسورد MySQL خودت
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -84,3 +84,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# تنظیمات مربوط به امانت
+BORROW_DURATION_DAYS = 14
+FINE_PER_DAY = {
+    'student': 5000,
+    'professor': 2000,
+}

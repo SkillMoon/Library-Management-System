@@ -1,3 +1,5 @@
+from multiprocessing.context import AuthenticationError
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -65,7 +67,7 @@ def profile_view(request):
 
 
 # ─────────────────────────────────────────
-# Librarian Management (FR01) — فقط admin
+# Librarian Management (FR01) — only admin
 # ─────────────────────────────────────────
 
 @login_required(login_url='/accounts/login/')
@@ -194,14 +196,12 @@ def member_delete(request, pk):
     })
 
 @login_required
+@role_required('admin', 'librarian')
 def import_users(request):
-    if request.user.role not in ['admin', 'librarian']:
-        return HttpResponseForbidden("دسترسی ندارید.")
 
     if request.method == 'POST' and request.FILES.get('excel_file'):
         excel_file = request.FILES['excel_file']
 
-        # فقط xlsx قبول می‌کنیم
         if not excel_file.name.endswith('.xlsx'):
             messages.error(request, 'فقط فایل xlsx قابل قبول است.')
             return redirect('accounts:import_users')
@@ -213,9 +213,7 @@ def import_users(request):
         fail_count = 0
         errors = []
 
-        # ردیف اول هدر است، از ردیف دوم شروع می‌کنیم
         for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
-            # خواندن ستون‌ها
             username    = str(row[0]).strip() if row[0] else None
             first_name  = str(row[1]).strip() if row[1] else ''
             last_name   = str(row[2]).strip() if row[2] else ''
@@ -224,26 +222,22 @@ def import_users(request):
             national_id = str(row[5]).strip() if row[5] else None
             phone       = str(row[6]).strip() if row[6] else ''
 
-            # اعتبارسنجی فیلدهای اجباری
             if not username or not national_id:
                 errors.append(f"ردیف {row_num}: username یا national_id خالی است.")
                 fail_count += 1
                 continue
 
-            # role معتبر باشه
             valid_roles = ['admin', 'librarian', 'student', 'professor']
             if role not in valid_roles:
                 errors.append(f"ردیف {row_num}: role نامعتبر است ({role}).")
                 fail_count += 1
                 continue
 
-            # اگر username تکراری باشه skip می‌کنیم
             if User.objects.filter(username=username).exists():
                 errors.append(f"ردیف {row_num}: username «{username}» تکراری است.")
                 fail_count += 1
                 continue
 
-            # ساخت کاربر — password = national_id
             try:
                 user = User(
                     username=username,
@@ -261,7 +255,6 @@ def import_users(request):
                 errors.append(f"ردیف {row_num}: خطا — {str(e)}")
                 fail_count += 1
 
-        # ثبت ImportLog
         ImportLog.objects.create(
             imported_by=request.user,
             file_name=excel_file.name,

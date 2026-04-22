@@ -3,18 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
-
+from config.settings import BORROW_DURATION_DAYS, FINE_PER_DAY
 from .models import BorrowRequest, Borrow, Fine
 from .forms import BorrowRequestForm, BorrowRequestResponseForm, ReturnForm
 from apps.books.models import BookCopy
 from apps.accounts.decorators import role_required
-
-
-FINE_PER_DAY = {
-    'student': 5000,    # FR16
-    'professor': 2000,  # FR17
-}
-BORROW_DURATION_DAYS = 14
 
 
 @login_required
@@ -128,7 +121,7 @@ def borrow_return(request, borrow_id):
         borrow.status = Borrow.Status.RETURNED
         borrow.save()
 
-        borrow.book_copy.status = condition  # 'available' یا 'damaged'
+        borrow.book_copy.status = condition
         borrow.book_copy.save()
 
         if today > borrow.due_date:
@@ -171,7 +164,7 @@ def borrow_list(request):
 def my_borrows(request):
     borrows = Borrow.objects.filter(
         user=request.user
-    ).select_related('book_copy__book', 'fine').order_by('status')
+    ).select_related('book_copy__book', 'fine').order_by('-return_date')
     return render(request, 'borrowing/my_borrows.html', {'borrows': borrows})
 
 @login_required
@@ -202,8 +195,8 @@ def borrow_direct_issue(request):
             Borrow.objects.create(
                 user=target_user,
                 book_copy=copy,
-                borrow_request=None,       # بدون درخواست آنلاین
-                librarian=request.user,    # کتابدار فعلی
+                borrow_request=None,
+                librarian=request.user,
                 borrow_date=timezone.now().date(),
                 due_date=timezone.now().date() + timedelta(days=BORROW_DURATION_DAYS),
                 status=Borrow.Status.ACTIVE,

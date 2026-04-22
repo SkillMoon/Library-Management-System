@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <h4>درخواست امانت کتاب</h4>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-      <br>
-    <button type="submit" class="btn btn-primary">ثبت درخواست</button>
-    <a href="{% url 'borrowing:my_requests' %}" class="btn btn-outline-red">انصراف</a>
-  </form>
+<div class="page-header">
+      <h4>درخواست امانت کتاب</h4>
 </div>
+<form method="post">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+      <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.errors %}
+          <div class="alert alert-danger">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+      <br>
+    <div class="d-flex gap-2">
+    <br>
+    <button type="submit" class="btn btn-primary">ذخیره</button>
+    <a href="{% url 'accounts:dashboard' %}"
+       class="btn btn-outline-red">انصراف</a>
+    </div>
+</form>
+
+
 {% endblock %}

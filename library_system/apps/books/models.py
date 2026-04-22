@@ -1,7 +1,5 @@
 # apps/books/models.py
-
 from django.db import models
-
 
 class Book(models.Model):
     title = models.CharField(max_length=255, verbose_name='عنوان')
@@ -33,13 +31,7 @@ class Book(models.Model):
         blank=True,
         verbose_name='توضیحات'
     )
-    cover_image = models.ImageField(
-        upload_to='covers/',
-        null=True,
-        blank=True,
-        verbose_name='تصویر جلد'
-    )
-    # ✅ اضافه شد — طبق معماری PDF
+
     total_copies = models.PositiveIntegerField(
         default=1,
         verbose_name='تعداد کل نسخه‌ها'
@@ -56,7 +48,6 @@ class Book(models.Model):
 
     @property
     def available_copies(self):
-        # ✅ اصلاح شد — بر اساس status نه is_available
         return self.copies.filter(status='available').count()
 
 
@@ -74,13 +65,11 @@ class BookCopy(models.Model):
         related_name='copies',
         verbose_name='کتاب'
     )
-    # ✅ اضافه شد — طبق معماری PDF
     copy_code = models.CharField(
         max_length=50,
         unique=True,
         verbose_name='کد نسخه'
     )
-    # ✅ جایگزین is_available — طبق معماری PDF
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,

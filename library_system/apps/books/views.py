@@ -17,7 +17,6 @@ from .forms import BookForm, BookCopyForm
 def book_list(request):
     books = Book.objects.prefetch_related('copies').all().order_by('-id')
 
-    # ─── فیلترهای جستجوی پیشرفته (FR08) ───
     title     = request.GET.get('title', '').strip()
     author    = request.GET.get('author', '').strip()
     publisher = request.GET.get('publisher', '').strip()
@@ -61,7 +60,6 @@ def book_create(request):
     form = BookForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         book = form.save()
-        # ✅ اگر total_copies > 0 بود، نسخه‌ها رو auto-generate کن
         total = book.total_copies or 0
         for i in range(1, total + 1):
             # فرمت کد: ISBN-001, ISBN-002, ...

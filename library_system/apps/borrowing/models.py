@@ -57,7 +57,7 @@ class Borrow(models.Model):
         related_name='borrows',
         verbose_name='نسخه کتاب'
     )
-    librarian = models.ForeignKey(          # ← از PDF، قبلاً گم بود
+    librarian = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
@@ -116,7 +116,7 @@ class Fine(models.Model):
     amount    = models.PositiveIntegerField(verbose_name='مبلغ جریمه (ریال)')
     days_late = models.PositiveIntegerField(verbose_name='تعداد روزهای تأخیر')
     is_paid   = models.BooleanField(default=False, verbose_name='پرداخت شده')
-    paid_at   = models.DateTimeField(null=True, blank=True, verbose_name='تاریخ پرداخت')  # ← DATETIME نه DATE
+    paid_at   = models.DateTimeField(null=True, blank=True, verbose_name='تاریخ پرداخت')
     registered_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
