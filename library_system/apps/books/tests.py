@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Book, BookCopy
+from apps.books.models import Book, BookCopy
 
 
 class BookModelTest(TestCase):
@@ -8,7 +8,7 @@ class BookModelTest(TestCase):
             title='تست کتاب',
             author='نویسنده تست',
             isbn='1234567890123',
-            subject='علوم کامپیوتر',
+            category='علوم کامپیوتر',
             publisher='انتشارات تست',
             publish_year=2024,
             total_copies=5
@@ -23,5 +23,4 @@ class BookModelTest(TestCase):
         BookCopy.objects.create(book=self.book, copy_code='C002', status='borrowed')
         BookCopy.objects.create(book=self.book, copy_code='C003', status='available')
 
-        self.assertEqual(self.book.available_copies_count(), 2)
-
+        self.assertEqual(self.book.available_copies, 2)

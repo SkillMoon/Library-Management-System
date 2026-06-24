@@ -1,16 +1,10 @@
-# config/settings.py
-
+from config.local_settings import *
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'your-secret-key-here'
-
-DEBUG = True
-
 ALLOWED_HOSTS = []
 
-# اپ‌های نصب‌شده
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -18,7 +12,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # اپ‌های پروژه
     'apps.accounts',
     'apps.books',
     'apps.borrowing',
@@ -53,7 +46,6 @@ TEMPLATES = [
     },
 ]
 
-# دیتابیس MySQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -65,7 +57,6 @@ DATABASES = {
     }
 }
 
-# زبان و timezone
 LANGUAGE_CODE = 'fa-ir'
 TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
@@ -75,17 +66,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# بعد از login به کجا بره
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
-# تنظیمات مربوط به امانت
 BORROW_DURATION_DAYS = 14
 FINE_PER_DAY = {
     'student': 5000,
